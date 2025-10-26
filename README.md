@@ -8,18 +8,19 @@ A ParaTech é uma equipe de robótica da temporada FRC, comprometida com inovaç
 - Loja ou produtos oficiais.  
 - Página de cadastro ou contato para novos membros ou patrocinadores.
 
-## 🚀 Estrutura do Projeto  
-O repositório está organizado da seguinte forma:  
-├── index.html # Página inicial
-├── cad.html # Página de cad
-├── loja.html # Página da loja oficial
-├── membros.html # Página com os membros da equipe
-├── projetos.html # Página de projetos da equipe
-├── us.html # Página “sobre nós” (quem somos)
-├── styles/style.css # Arquivo de estilos CSS
-├── js/script.js # Arquivo de lógica JavaScript
-├── images/ # Imagens usadas no site
-└── teste/ # (Pasta de testes)
+## 🚀 Estrutura do Projeto    
+0. O repositório está organizado da seguinte forma::  
+   ```bash
+   ├── index.html # Página inicial
+   ├── cad.html # Página de cad
+   ├── loja.html # Página da loja oficial
+   ├── membros.html # Página com os membros da equipe
+   ├── projetos.html # Página de projetos da equipe
+   ├── us.html # Página “sobre nós” (quem somos)
+   ├── styles/style.css # Arquivo de estilos CSS
+   ├── js/script.js # Arquivo de lógica JavaScript
+   ├── images/ # Imagens usadas no site
+   └── teste/ # (Pasta de testes)
 
 Essa estrutura facilita a manutenção do site, com separação clara entre layout, estilos e scripts.
 
