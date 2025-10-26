@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -59,20 +60,20 @@
 
     <section class="page-hero">
         <div class="container">
-            <h1>Sobre Nós</h1>
-            <p>Conheça a história da Paratech FRC 9302</p>
+            <h1 data-aos="fade-up">Sobre Nós</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Conheça a história da Paratech FRC 9302</p>
         </div>
     </section>
 
     <section class="about-carousel">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-aos="fade-up">
                 <h2>Nossa Jornada</h2>
                 <div class="section-line"></div>
                 <p>Momentos marcantes da nossa trajetória na robótica</p>
             </div>
             
-            <div class="carousel-container">
+            <div class="carousel-container" data-aos="fade-up" data-aos-delay="200">
                 <div class="carousel-slide active">
                     <div class="slide-content">
                         <div class="slide-text">
@@ -161,13 +162,13 @@
 
     <section class="sponsors">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-aos="fade-up">
                 <h2>Nossos Valores</h2>
                 <div class="section-line"></div>
                 <p>Os princípios que guiam nossa jornada</p>
             </div>
             <div class="sponsors-grid">
-                <div class="sponsor-card">
+                <div class="sponsor-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="sponsor-logo">
                         <i class="fas fa-lightbulb" style="font-size: 3rem; color: #2563eb;"></i>
                     </div>
@@ -176,7 +177,7 @@
                         <p>Buscamos constantemente soluções criativas e tecnológicas para os desafios que enfrentamos.</p>
                     </div>
                 </div>
-                <div class="sponsor-card">
+                <div class="sponsor-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="sponsor-logo">
                         <i class="fas fa-users" style="font-size: 3rem; color: #2563eb;"></i>
                     </div>
@@ -185,7 +186,7 @@
                         <p>Acreditamos que os melhores resultados vêm do trabalho em equipe e da diversidade de ideias.</p>
                     </div>
                 </div>
-                <div class="sponsor-card">
+                <div class="sponsor-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="sponsor-logo">
                         <i class="fas fa-heart" style="font-size: 3rem; color: #2563eb;"></i>
                     </div>
@@ -194,7 +195,7 @@
                         <p>Usamos nossa paixão por tecnologia para criar mudanças positivas em nossa comunidade.</p>
                     </div>
                 </div>
-                <div class="sponsor-card">
+                <div class="sponsor-card" data-aos="fade-up" data-aos-delay="400">
                     <div class="sponsor-logo">
                         <i class="fas fa-trophy" style="font-size: 3rem; color: #2563eb;"></i>
                     </div>
@@ -240,7 +241,18 @@
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="./script.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    </script>
+    <script src="./script.js"></script>
 </body>
 
 </html>

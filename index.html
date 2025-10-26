@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -59,12 +60,12 @@
             <img src="./images/background.png" alt="Background" class="hero-bg-image">
             <div class="hero-overlay"></div>
         </div>
-        <div class="hero-content">
-            <div class="hero-logo">
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+            <div class="hero-logo" data-aos="zoom-in" data-aos-delay="200">
                 <img src="./images/logo-paratech.png" alt="Paratech Logo" class="hero-logo-img">
             </div>
-            <p class="hero-subtitle">"Que a estrela do Norte, continue a brilhar!"</p>
-            <button class="cta-button" onclick="scrollToSection('projects')">
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="400">"Que a estrela do Norte, continue a brilhar!"</p>
+            <button class="cta-button" data-aos="fade-up" data-aos-delay="600" onclick="scrollToSection('projects')">
                 Conheça mais <i class="fas fa-arrow-down"></i>
             </button>
         </div>
@@ -72,12 +73,12 @@
 
     <section class="projects" id="projects">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-aos="fade-up">
                 <h2>Projetos</h2>
                 <div class="section-line"></div>
             </div>
             <div class="projects-grid">
-                <div class="project-card" onclick="window.location.href='projetos.html'">
+                <div class="project-card" data-aos="fade-up" data-aos-delay="100" onclick="window.location.href='projetos.html'">
                     <div class="project-image">
                         <img src="./images/marajo.jpg" alt="Nas ilhas" onerror="this.src='https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=250&fit=crop'">
                         <div class="project-overlay">
@@ -91,7 +92,7 @@
                     </div>
                 </div>
                 
-                <div class="project-card" onclick="window.location.href='projetos.html'">
+                <div class="project-card" data-aos="fade-up" data-aos-delay="200" onclick="window.location.href='projetos.html'">
                     <div class="project-image">
                         <img src="./images/descomplica.jpeg" alt="Descomplica" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=250&fit=crop'">
                         <div class="project-overlay">
@@ -105,7 +106,7 @@
                     </div>
                 </div>
                 
-                <div class="project-card" onclick="window.location.href='projetos.html'">
+                <div class="project-card" data-aos="fade-up" data-aos-delay="300" onclick="window.location.href='projetos.html'">
                     <div class="project-image">
                         <img src="./images/cop30.jpg" alt="COP 30" onerror="this.src='https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=250&fit=crop'">
                         <div class="project-overlay">
@@ -120,7 +121,7 @@
                 </div>
             </div>
             
-            <div class="projects-cta">
+            <div class="projects-cta" data-aos="fade-up" data-aos-delay="400">
                 <a href="projetos.html" class="btn btn-primary">Ver todos os projetos</a>
             </div>
         </div>
@@ -128,14 +129,14 @@
 
     <section class="store" id="store-preview">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-aos="fade-up">
                 <h2>Loja ParaTech</h2>
                 <div class="section-line"></div>
                 <p>Apoie nossa equipe e leve um pedaço da ParaTech com você</p>
             </div>
             
             <div class="store-grid">
-                <div class="store-item">
+                <div class="store-item" data-aos="fade-up" data-aos-delay="100">
                     <img src="./images/tshirt.png" alt="Camiseta Oficial ParaTech FRC #9302">
                     <div class="store-item-content">
                         <h3>Camiseta Oficial</h3>
@@ -145,7 +146,7 @@
                     </div>
                 </div>
                 
-                <div class="store-item">
+                <div class="store-item" data-aos="fade-up" data-aos-delay="200">
                     <img src="./images/bone.png" alt="Boné ParaTech">
                     <div class="store-item-content">
                         <h3>Boné Oficial</h3>
@@ -155,7 +156,7 @@
                     </div>
                 </div>
                 
-                <div class="store-item">
+                <div class="store-item" data-aos="fade-up" data-aos-delay="300">
                     <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop" alt="Kit Bottons ParaTech">
                     <div class="store-item-content">
                         <h3>Kit Bottons</h3>
@@ -166,7 +167,7 @@
                 </div>
             </div>
             
-            <div class="store-cta">
+            <div class="store-cta" data-aos="fade-up" data-aos-delay="400">
                 <a href="loja.html" class="btn btn-primary">Acesse Nossa Loja Completa</a>
             </div>
         </div>
@@ -174,13 +175,13 @@
 
     <section class="sponsors">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-aos="fade-up">
                 <h2>Nossos Patrocinadores</h2>
                 <div class="section-line"></div>
                 <p>Empresas que acreditam no nosso potencial e apoiam nossa jornada</p>
             </div>
             <div class="sponsors-grid">
-                <div class="sponsor-card premium">
+                <div class="sponsor-card premium" data-aos="fade-up" data-aos-delay="100">
                     <div class="sponsor-badge">
                         <i class="fas fa-crown"></i>
                         <span>Patrocinador Ouro</span>
@@ -198,7 +199,7 @@
                     </div>
                 </div>
 
-                <div class="sponsor-card silver">
+                <div class="sponsor-card silver" data-aos="fade-up" data-aos-delay="200">
                     <div class="sponsor-badge">
                         <i class="fas fa-medal"></i>
                         <span>Patrocinador Prata</span>
@@ -215,7 +216,7 @@
                     </div>
                 </div>
 
-                <div class="sponsor-card bronze">
+                <div class="sponsor-card bronze" data-aos="fade-up" data-aos-delay="300">
                     <div class="sponsor-badge">
                         <i class="fas fa-star"></i>
                         <span>Patrocinador Bronze</span>
@@ -233,7 +234,7 @@
                     </div>
                 </div>
 
-                <div class="sponsor-card community">
+                <div class="sponsor-card community" data-aos="fade-up" data-aos-delay="400">
                     <div class="sponsor-badge">
                         <i class="fas fa-handshake"></i>
                         <span>Apoiador</span>
@@ -252,7 +253,7 @@
                 </div>
             </div>
             
-            <div class="sponsors-cta">
+            <div class="sponsors-cta" data-aos="fade-up" data-aos-delay="500">
                 <p>Quer fazer parte da nossa jornada?</p>
                 <a href="/cdn-cgi/l/email-protection#ec8f8382988d9883ac9c8d9e8d98898f84d5dfdcdec28f8381" class="btn btn-outline">Torne-se um patrocinador</a>
             </div>
@@ -292,6 +293,16 @@
     </footer>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    </script>
     <script src="./script.js"></script>
 </body>
 
