@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/favicon-16x16.png" type="image/png">
+    <title>Paratech FRC 9302 - Equipe Oficial</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="header" id="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="./images/logo.png" alt="Paratech Logo" class="logo">
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="us.html" class="nav-link">Sobre nós</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="projetos.html" class="nav-link">Projetos</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">
+                            Mídia <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="https://youtube.com/@paratech9302" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
+                            <li><a href="https://tiktok.com/@paratech9302" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a></li>
+                            <li><a href="https://instagram.com/paratech9302" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="cad.html" class="nav-link">CAD</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="membros.html" class="nav-link">Membros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="loja.html" class="nav-link">Loja</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-background">
+            <img src="./images/background.png" alt="Background" class="hero-bg-image">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-logo">
+                <img src="./images/logo-paratech.png" alt="Paratech Logo" class="hero-logo-img">
+            </div>
+            <p class="hero-subtitle">"Que a estrela do Norte, continue a brilhar!"</p>
+            <button class="cta-button" onclick="scrollToSection('projects')">
+                Conheça mais <i class="fas fa-arrow-down"></i>
+            </button>
+        </div>
+    </section> 
+
+    <section class="projects" id="projects">
+        <div class="container">
+            <div class="section-header">
+                <h2>Projetos</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card" onclick="window.location.href='projetos.html'">
+                    <div class="project-image">
+                        <img src="./images/marajo.jpg" alt="Nas ilhas" onerror="this.src='https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=250&fit=crop'">
+                        <div class="project-overlay">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Robótica Nas Ilhas</h3>
+                        <p>Levamos a robótica para as comunidades ribeirinhas do Pará, organizando campeonatos de futebol de robô nas ilhas e capacitando jovens locais.</p>
+                        <div class="project-status completed">Concluído</div>
+                    </div>
+                </div>
+                
+                <div class="project-card" onclick="window.location.href='projetos.html'">
+                    <div class="project-image">
+                        <img src="./images/descomplica.jpeg" alt="Descomplica" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=250&fit=crop'">
+                        <div class="project-overlay">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Paratech Descomplica</h3>
+                        <p>Programa que leva conhecimentos de robótica e programação através das redes sociais.</p>
+                        <div class="project-status completed">Concluído</div>
+                    </div>
+                </div>
+                
+                <div class="project-card" onclick="window.location.href='projetos.html'">
+                    <div class="project-image">
+                        <img src="./images/cop30.jpg" alt="COP 30" onerror="this.src='https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=250&fit=crop'">
+                        <div class="project-overlay">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Sistema de Automação para ONG</h3>
+                        <p>Sistema automatizado para controle de estoque e distribuição de alimentos em ONG local.</p>
+                        <div class="project-status completed">Concluído</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="projects-cta">
+                <a href="projetos.html" class="btn btn-primary">Ver todos os projetos</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="store" id="store-preview">
+        <div class="container">
+            <div class="section-header">
+                <h2>Loja ParaTech</h2>
+                <div class="section-line"></div>
+                <p>Apoie nossa equipe e leve um pedaço da ParaTech com você</p>
+            </div>
+            
+            <div class="store-grid">
+                <div class="store-item">
+                    <img src="./images/tshirt.png" alt="Camiseta Oficial ParaTech FRC #9302">
+                    <div class="store-item-content">
+                        <h3>Camiseta Oficial</h3>
+                        <p>Camiseta 100% dry com design exclusivo da ParaTech FRC #9302</p>
+                        <span class="price">R$ 55,00</span>
+                        <a href="loja.html" class="store-btn">Ver na Loja</a>
+                    </div>
+                </div>
+                
+                <div class="store-item">
+                    <img src="./images/bone.png" alt="Boné ParaTech">
+                    <div class="store-item-content">
+                        <h3>Boné Oficial</h3>
+                        <p>Boné ajustável com bordado da ParaTech FRC e logo da equipe</p>
+                        <span class="price">R$ 35,00</span>
+                        <a href="loja.html" class="store-btn">Ver na Loja</a>
+                    </div>
+                </div>
+                
+                <div class="store-item">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop" alt="Kit Bottons ParaTech">
+                    <div class="store-item-content">
+                        <h3>Kit Bottons</h3>
+                        <p>Conjunto de bottons com logos, mascote e design exclusivo da #9302</p>
+                        <span class="price">R$ 15,00</span>
+                        <a href="loja.html" class="store-btn">Ver na Loja</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="store-cta">
+                <a href="loja.html" class="btn btn-primary">Acesse Nossa Loja Completa</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="sponsors">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nossos Patrocinadores</h2>
+                <div class="section-line"></div>
+                <p>Empresas que acreditam no nosso potencial e apoiam nossa jornada</p>
+            </div>
+            <div class="sponsors-grid">
+                <div class="sponsor-card premium">
+                    <div class="sponsor-badge">
+                        <i class="fas fa-crown"></i>
+                        <span>Patrocinador Ouro</span>
+                    </div>
+                    <div class="sponsor-logo">
+                        <img src="./images/sesi.png" alt="TechCorp" onerror="this.src='https://via.placeholder.com/200x100/2563eb/ffffff?text=TechCorp'">
+                    </div>
+                    <div class="sponsor-info">
+                        <h3>SESI Pará</h3>
+                        <p>Líder em educação tecnológica e inovadora</p>
+                        <div class="sponsor-support">
+                            <span class="support-tag">Workspace</span>
+                            <span class="support-tag">Recursos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sponsor-card silver">
+                    <div class="sponsor-badge">
+                        <i class="fas fa-medal"></i>
+                        <span>Patrocinador Prata</span>
+                    </div>
+                    <div class="sponsor-logo">
+                        <img src="./images/rockwell.png" alt="InnovateLab" onerror="this.src='https://via.placeholder.com/200x100/059669/ffffff?text=InnovateLab'">
+                    </div>
+                    <div class="sponsor-info">
+                        <h3>Rockell Automation</h3>
+                        <p>líder global em tecnologias de automação industrial</p>
+                        <div class="sponsor-support">
+                            <span class="support-tag">Recursos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sponsor-card bronze">
+                    <div class="sponsor-badge">
+                        <i class="fas fa-star"></i>
+                        <span>Patrocinador Bronze</span>
+                    </div>
+                    <div class="sponsor-logo">
+                        <img src="./images/stemos.png" alt="FutureEd" onerror="this.src='https://via.placeholder.com/200x100/dc2626/ffffff?text=FutureEd'">
+                    </div>
+                    <div class="sponsor-info">
+                        <h3>Stemos</h3>
+                        <p>Instituto de educação do futuro</p>
+                        <div class="sponsor-support">
+                            <span class="support-tag">Educação</span>
+                            <span class="support-tag">Cursos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sponsor-card community">
+                    <div class="sponsor-badge">
+                        <i class="fas fa-handshake"></i>
+                        <span>Apoiador</span>
+                    </div>
+                    <div class="sponsor-logo">
+                        <img src="./images/usinas.jpg" alt="Community Hub" onerror="this.src='https://via.placeholder.com/200x100/7c3aed/ffffff?text=Community+Hub'">
+                    </div>
+                    <div class="sponsor-info">
+                        <h3>Usinas Da Paz</h3>
+                        <p>Centro comunitário de tecnologia</p>
+                        <div class="sponsor-support">
+                            <span class="support-tag">Eventos</span>
+                            <span class="support-tag">Networking</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sponsors-cta">
+                <p>Quer fazer parte da nossa jornada?</p>
+                <a href="/cdn-cgi/l/email-protection#ec8f8382988d9883ac9c8d9e8d98898f84d5dfdcdec28f8381" class="btn btn-outline">Torne-se um patrocinador</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="us.html">Sobre</a></li>
+                        <li><a href="projetos.html">Projetos</a></li>
+                        <li><a href="cad.html">CAD</a></li>
+                        <li><a href="loja.html">Loja</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Redes Sociais</h3>
+                    <div class="social-links">
+                        <a href="https://youtube.com/@paratech9302" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://tiktok.com/@paratech_frc" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://instagram.com/paratech_frc" target="_blank"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <p>Email: <a href="/cdn-cgi/l/email-protection#afccc0c1dbcedbc0efdfceddcedbcaccc7969c9f9d81ccc0c2"><span class="__cf_email__" data-cfemail="d5b6babba1b4a1ba95a5b4a7b4a1b0b6bdece6e5e7fbb6bab8">[email&#160;protected]</span></a></p>
+                    <p>Telefone: (91) 98852-8008</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Paratech FRC 9302 – Desenvolvido por Equipe Paratech</p>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="./script.js"></script>
+</body>
+
+</html>

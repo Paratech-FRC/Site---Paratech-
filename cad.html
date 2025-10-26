@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/favicon-16x16.png" type="image/png">
+    <title>CAD - Paratech FRC 9302</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./styles/cad-page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Enhanced Header -->
+    <header class="header" id="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="./images/logo.png" alt="Paratech Logo" class="logo">
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="us.html" class="nav-link">Sobre nós</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="projetos.html" class="nav-link">Projetos</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">
+                            Mídia <i class="fas fa-chevron-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="https://youtube.com/@paratech9302" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
+                            <li><a href="https://tiktok.com/@paratech9302" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a></li>
+                            <li><a href="https://instagram.com/paratech9302" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="cad.html" class="nav-link active">CAD</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="membros.html" class="nav-link">Membros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="loja.html" class="nav-link">Loja</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <h1 data-aos="fade-up">Nossos Robôs CAD</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Evolução tecnológica através dos anos - Design, engenharia e inovação em cada temporada</p>
+        </div>
+    </section>
+
+    <!-- Robot Timeline -->
+    <section class="robot-timeline">
+        <div class="timeline-container">
+            <div class="section-header">
+                <h2>Linha do Tempo dos Robôs</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <!-- Robot 2026 -->
+            <div class="robot-card" data-aos="fade-up" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="year-badge">2026</div>
+                    <h3 class="robot-title">Safira</h3>
+                    <p class="season-name">Temporada "Rebuilt" - Reconstrução e Inovação</p>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="robot-info">
+                            <div class="info-section">
+                                <h4><i class="fas fa-info-circle"></i> Especificações</h4>
+                                <ul class="spec-list">
+                                    <li><span class="spec-label">Dimensões:</span> <span class="spec-value">78cm x 86cm x 125cm</span></li>
+                                    <li><span class="spec-label">Peso:</span> <span class="spec-value">56kg</span></li>
+                                    <li><span class="spec-label">Sistema de Locomoção:</span> <span class="spec-value">Swerve Drive Avançado</span></li>
+                                    <li><span class="spec-label">Status:</span> <span class="spec-value">Em Planejamento</span></li>
+                                </ul>
+                            </div>
+                            <div class="info-section">
+                                <h4><i class="fas fa-trophy"></i> Objetivos</h4>
+                                <ul class="spec-list">
+                                    <li><span class="spec-label">Temporada:</span> <span class="spec-value">2026</span></li>
+                                    <li><span class="spec-label">Tema:</span> <span class="spec-value">Reconstrução</span></li>
+                                    <li><span class="spec-label">Inovação:</span> <span class="spec-value">IA Integrada</span></li>
+                                    <li><span class="spec-label">Meta:</span> <span class="spec-value">Campeonato Mundial</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="robot-gallery">
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=250&fit=crop" alt="Safira - Conceito">
+                                <div class="gallery-overlay">
+                                    <h5>Conceito Inicial</h5>
+                                    <p>Design futurista do Safira</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=250&fit=crop" alt="Sistema IA">
+                                <div class="gallery-overlay">
+                                    <h5>Sistema de IA</h5>
+                                    <p>Inteligência artificial integrada</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=250&fit=crop" alt="Chassis Avançado">
+                                <div class="gallery-overlay">
+                                    <h5>Chassis Avançado</h5>
+                                    <p>Estrutura otimizada para máxima performance</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="description">
+                            <p>O Safira representa nossa visão para o futuro da robótica competitiva na temporada 2026 "Rebuilt". Com foco em reconstrução e inovação, este robô incorporará tecnologias de inteligência artificial e sistemas adaptativos. O design avançado do Safira visa não apenas competir, mas redefinir os padrões de excelência na FRC, combinando eficiência energética, precisão cirúrgica e capacidades autônomas revolucionárias.</p>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="https://cad.onshape.com/documents/safira2026" target="_blank" class="btn-primary">
+                                <i class="fas fa-cube"></i> Ver no Onshape
+                            </a>
+                            <a href="#" class="btn-outline">
+                                <i class="fas fa-download"></i> Baixar Arquivos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Robot 2025 -->
+            <div class="robot-card" data-aos="fade-up" data-aos-delay="100" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="year-badge">2025</div>
+                    <h3 class="robot-title">Búfalo</h3>
+                    <p class="season-name">Temporada "Reefscape" - Preservação Marinha</p>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="robot-info">
+                            <div class="info-section">
+                                <h4><i class="fas fa-info-circle"></i> Especificações</h4>
+                                <ul class="spec-list">
+                                    <li><span class="spec-label">Dimensões:</span> <span class="spec-value">76cm x 84cm x 120cm</span></li>
+                                    <li><span class="spec-label">Peso:</span> <span class="spec-value">54kg</span></li>
+                                    <li><span class="spec-label">Sistema de Locomoção:</span> <span class="spec-value">Swerve Drive</span></li>
+                                    <li><span class="spec-label">Status:</span> <span class="spec-value">Em Desenvolvimento</span></li>
+                                </ul>
+                            </div>
+                            <div class="info-section">
+                                <h4><i class="fas fa-trophy"></i> Conquistas</h4>
+                                <ul class="spec-list">
+                                    <li><span class="spec-label">Temporada:</span> <span class="spec-value">2025</span></li>
+                                    <li><span class="spec-label">Tema:</span> <span class="spec-value">Sustentabilidade</span></li>
+                                    <li><span class="spec-label">Inovação:</span> <span class="spec-value">Sistema Eco-Friendly</span></li>
+                                    <li><span class="spec-label">Objetivo:</span> <span class="spec-value">Preservação Marinha</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="robot-gallery">
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=250&fit=crop" alt="Búfalo - Visão Geral">
+                                <div class="gallery-overlay">
+                                    <h5>Modelo Completo</h5>
+                                    <p>Visão geral do robô Búfalo</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=250&fit=crop" alt="Sistema Swerve">
+                                <div class="gallery-overlay">
+                                    <h5>Sistema Swerve</h5>
+                                    <p>Chassis com locomoção omnidirecional</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=250&fit=crop" alt="Sistema de Intake">
+                                <div class="gallery-overlay">
+                                    <h5>Sistema de Coleta</h5>
+                                    <p>Mecanismo inovador para elementos marinhos</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="description">
+                            <p>O Búfalo representa nossa mais recente inovação em robótica competitiva, desenvolvido especificamente para a temporada 2025 "Reefscape". Com foco na preservação marinha, este robô incorpora tecnologias sustentáveis e sistemas de alta eficiência para coleta e manipulação de elementos do jogo relacionados ao ecossistema marinho. O sistema swerve drive permite movimentação omnidirecional precisa, essencial para navegação em ambientes complexos simulando recifes de coral.</p>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="https://cad.onshape.com/documents/bufalo2025" target="_blank" class="btn-primary">
+                                <i class="fas fa-cube"></i> Ver no Onshape
+                            </a>
+                            <a href="#" class="btn-outline">
+                                <i class="fas fa-download"></i> Baixar Arquivos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Robot 2024 -->
+            <div class="robot-card" data-aos="fade-up" data-aos-delay="200" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="year-badge">2024</div>
+                    <h3 class="robot-title">Blu</h3>
+                    <p class="season-name">Temporada "Crescendo" - Sinfonia Musical</p>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="robot-info">
+                            <div class="info-section">
+                                <h4><i class="fas fa-info-circle"></i> Especificações</h4>
+                                <ul class="spec-list">
+                                    <li><span class="spec-label">Dimensões:</span> <span class="spec-value">71cm x 79cm x 115cm</span></li>
+                                    <li><span class="spec-label">Peso:</span> <span class="spec-value">52kg</span></li>
+                                    <li><span class="spec-label">Sistema de Locomoção:</span> <span class="spec-value">Tank Drive</span></li>
+                                    <li><span class="spec-label">Status:</span> <span class="spec-value">Concluído</span></li>
+                                </ul>
+                            </div>
+                            <div class="info-section">
+                                <h4><i class="fas fa-trophy"></i> Conquistas</h4>
+                                <ul class="spec-list">
+                                    <li><span class="spec-label">Regional SP:</span> <span class="spec-value">1º Lugar</span></li>
+                                    <li><span class="spec-label">Precisão de Tiro:</span> <span class="spec-value">94%</span></li>
+                                    <li><span class="spec-label">Velocidade:</span> <span class="spec-value">4.2 m/s</span></li>
+                                    <li><span class="spec-label">Autonomo:</span> <span class="spec-value">15 pontos</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="robot-gallery">
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=250&fit=crop" alt="Blu 2024 - Visão Geral">
+                                <div class="gallery-overlay">
+                                    <h5>Modelo Completo</h5>
+                                    <p>Robô campeão da temporada 2024</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=250&fit=crop" alt="Sistema de Tiro">
+                                <div class="gallery-overlay">
+                                    <h5>Sistema de Tiro</h5>
+                                    <p>Mecanismo de alta precisão com PID</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=250&fit=crop" alt="Sistema de Escalada">
+                                <div class="gallery-overlay">
+                                    <h5>Sistema de Escalada</h5>
+                                    <p>Mecanismo telescópico para climb</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="description">
+                            <p>O Blu foi nosso robô campeão de 2024, projetado para dominar a temporada "Crescendo" com sua precisão musical. Equipado com um sistema de tiro de alta precisão controlado por PID, conseguiu uma taxa de acerto de 94% nos speakers. O sistema de escalada telescópico permitiu climbs rápidos e seguros, contribuindo significativamente para nossa vitória no Regional de São Paulo. Sua construção robusta e confiável o tornou um dos robôs mais consistentes da competição.</p>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="https://cad.onshape.com/documents/blu2024" target="_blank" class="btn-primary">
+                                <i class="fas fa-cube"></i> Ver no Onshape
+                            </a>
+                            <a href="#" class="btn-outline">
+                                <i class="fas fa-download"></i> Baixar Arquivos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Robot 2023 -->
+            <div class="robot-card" data-aos="fade-up" data-aos-delay="300" onclick="toggleCard(this)">
+                <div class="card-header">
+                    <div class="year-badge">2023</div>
+                    <h3 class="robot-title">Blu</h3>
+                    <p class="season-name">Temporada "Charged Up" - Nosso Primeiro Robô</p>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="robot-info">
+                            <div class="info-section">
+                                <h4><i class="fas fa-info-circle"></i> Especificações</h4>
+                                <ul class="spec-list">
+                                    <li><span class="spec-label">Dimensões:</span> <span class="spec-value">68cm x 76cm x 110cm</span></li>
+                                    <li><span class="spec-label">Peso:</span> <span class="spec-value">48kg</span></li>
+                                    <li><span class="spec-label">Sistema de Locomoção:</span> <span class="spec-value">Tank Drive</span></li>
+                                    <li><span class="spec-label">Status:</span> <span class="spec-value">Concluído</span></li>
+                                </ul>
+                            </div>
+                            <div class="info-section">
+                                <h4><i class="fas fa-trophy"></i> Conquistas</h4>
+                                <ul class="spec-list">
+                                    <li><span class="spec-label">Prêmio:</span> <span class="spec-value">Rookie All Star</span></li>
+                                    <li><span class="spec-label">Primeiro Robô:</span> <span class="spec-value">Equipe Rookie</span></li>
+                                    <li><span class="spec-label">Aprendizado:</span> <span class="spec-value">Base para futuros</span></li>
+                                    <li><span class="spec-label">Inovação:</span> <span class="spec-value">Design simples</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="robot-gallery">
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=250&fit=crop" alt="Blu 2023 - Visão Geral">
+                                <div class="gallery-overlay">
+                                    <h5>Primeiro Robô</h5>
+                                    <p>Nosso marco inicial na FRC</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=250&fit=crop" alt="Braço Robótico">
+                                <div class="gallery-overlay">
+                                    <h5>Braço Robótico</h5>
+                                    <p>Sistema para manipular cones e cubos</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=250&fit=crop" alt="Sistema de Equilíbrio">
+                                <div class="gallery-overlay">
+                                    <h5>Auto-Balanceamento</h5>
+                                    <p>Mecanismo para equilibrar na plataforma</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="description">
+                            <p>O Blu marca o início da nossa jornada na FRC como equipe rookie em 2023. Projetado para a temporada "Charged Up", este robô nos ensinou os fundamentos da robótica competitiva. Com um braço robótico articulado para manipular cones e cubos, e um sistema de auto-balanceamento inovador, o Blu nos rendeu o prestigioso prêmio Rookie All Star. Apesar de sua simplicidade comparado aos robôs atuais, ele estabeleceu as bases sólidas para todos os nossos desenvolvimentos futuros e representa o espírito de inovação e determinação da equipe Paratech.</p>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="https://cad.onshape.com/documents/blu2023" target="_blank" class="btn-primary">
+                                <i class="fas fa-cube"></i> Ver no Onshape
+                            </a>
+                            <a href="#" class="btn-outline">
+                                <i class="fas fa-download"></i> Baixar Arquivos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="us.html">Sobre</a></li>
+                        <li><a href="projetos.html">Projetos</a></li>
+                        <li><a href="cad.html">CAD</a></li>
+                        <li><a href="loja.html">Loja</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Redes Sociais</h3>
+                    <div class="social-links">
+                        <a href="https://youtube.com/@paratech9302" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://tiktok.com/@paratech9302" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://instagram.com/paratech9302" target="_blank"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <p>Email: <a href="/cdn-cgi/l/email-protection#771418190316031837071605160312141f4e4447455914181a"><span class="__cf_email__" data-cfemail="096a66677d687d664979687b687d6c6a61303a393b276a6664">[email&#160;protected]</span></a></p>
+                    <p>Telefone: (91) 98852-8008</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Paratech FRC 9302 – Desenvolvido por Equipe Paratech</p>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Toggle card expansion
+        function toggleCard(card) {
+            const isExpanded = card.classList.contains('expanded');
+            
+            // Close all other cards
+            document.querySelectorAll('.robot-card').forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('expanded');
+                }
+            });
+            
+            // Toggle current card
+            if (isExpanded) {
+                card.classList.remove('expanded');
+            } else {
+                card.classList.add('expanded');
+            }
+        }
+    </script>
+</body>
+
+</html>

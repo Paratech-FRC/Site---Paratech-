@@ -1,0 +1,84 @@
+/* Responsividade */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background-color: white;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+        padding: 2rem 0;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+    }
+
+    .slide-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .carousel-slide {
+        padding: 2rem;
+    }
+
+    .carousel-controls {
+        padding: 1.5rem 2rem;
+    }
+
+    .stats-mini {
+        justify-content: center;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sponsors-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .store-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    section {
+        padding: 3rem 0;
+    }
+
+    .hero-logo-img {
+        max-width: 250px;
+    }
+
+    .carousel-slide {
+        padding: 1.5rem;
+    }
+
+    .project-card,
+    .sponsor-card,
+    .store-item {
+        margin: 0 10px;
+    }
+}
