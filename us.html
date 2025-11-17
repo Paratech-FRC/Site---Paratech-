@@ -10,9 +10,315 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* Estilos específicos para a página Sobre Nós com efeito de revista */
+        
+        .comic-hero {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .comic-hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .comic-hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+        }
+        
+        .comic-hero p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .comic-section {
+            padding: 5rem 0;
+            position: relative;
+        }
+        
+        .comic-section:nth-child(odd) {
+            background: #f8fafc;
+        }
+        
+        .comic-section:nth-child(even) {
+            background: white;
+        }
+        
+        .comic-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .comic-block {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            position: relative;
+        }
+        
+        .comic-block.reverse {
+            flex-direction: row-reverse;
+        }
+        
+        .comic-text {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .comic-text h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .comic-text h2::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+        }
+        
+        .comic-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #475569;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comic-image {
+            flex: 1;
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .comic-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .comic-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* Efeito de papel rasgado adaptado do código original */
+        .paper-effect-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .image-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .paper-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('./images/paper-texture.png'); /* Você precisa criar/adicionar essa imagem */
+            background-size: cover;
+            background-position: center;
+            mix-blend-mode: lighten;
+            opacity: 0.7;
+        }
+        
+        /* Alternativa: usando um padrão SVG se não tiver a imagem de papel */
+        .paper-overlay-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+            opacity: 0.6;
+        }
+        
+        /* Balões de fala estilo HQ */
+        .speech-bubble {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 3px solid #2563eb;
+        }
+        
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50px;
+            width: 0;
+            height: 0;
+            border: 15px solid transparent;
+            border-top-color: white;
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -7.5px;
+            margin-bottom: -15px;
+            filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.1));
+        }
+        
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -19px;
+            left: 48px;
+            width: 0;
+            height: 0;
+            border: 17px solid transparent;
+            border-top-color: #2563eb;
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -8.5px;
+            margin-bottom: -17px;
+            z-index: -1;
+        }
+        
+        /* Elementos de estilo comic */
+        .comic-accent {
+            position: absolute;
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(37, 99, 235, 0.1);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .comic-accent.top-left {
+            top: -30px;
+            left: -30px;
+        }
+        
+        .comic-accent.bottom-right {
+            bottom: -30px;
+            right: -30px;
+        }
+        
+        .comic-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .comic-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #2563eb;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .comic-stat .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            display: block;
+        }
+        
+        .comic-stat .label {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 968px) {
+            .comic-block {
+                flex-direction: column;
+            }
+            
+            .comic-block.reverse {
+                flex-direction: column;
+            }
+            
+            .comic-image {
+                height: 400px;
+            }
+            
+            .comic-hero h1 {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .comic-hero {
+                padding: 100px 0 60px;
+            }
+            
+            .comic-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .comic-hero p {
+                font-size: 1.2rem;
+            }
+            
+            .comic-text h2 {
+                font-size: 2rem;
+            }
+            
+            .comic-stats {
+                flex-direction: column;
+            }
+        }
+        
+        /* Animações específicas */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .comic-image {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Header fixo -->
     <header class="header">
         <nav class="navbar">
             <div class="nav-container">
@@ -65,160 +371,104 @@
         </div>
     </section>
 
-    <section class="about-carousel">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>Nossa Jornada</h2>
-                <div class="section-line"></div>
-                <p>Momentos marcantes da nossa trajetória na robótica</p>
-            </div>
-            
-            <div class="carousel-container" data-aos="fade-up" data-aos-delay="200">
-                <div class="carousel-slide active">
-                    <div class="slide-content">
-                        <div class="slide-text">
-                            <h3>Como tudo começou</h3>
-                            <p>A Paratech FRC 9302 nasceu em 2023 da paixão de um grupo de estudantes por robótica e tecnologia. Inspirados pelos valores do programa FIRST Robotics Competition, decidimos criar uma equipe que não apenas competisse, mas que também fizesse a diferença em nossa comunidade.</p>
-                            <p>Nossos fundadores vieram de diferentes áreas - engenharia, programação, design e marketing - unidos pelo sonho comum de usar a tecnologia para resolver problemas reais e inspirar outros jovens a seguir carreiras em STEM.</p>
-                            <div class="stats-mini">
-                                <div class="stat-item-mini">
-                                    <span class="stat-number">2023</span>
-                                    <span class="stat-label">Fundação</span>
-                                </div>
-                                <div class="stat-item-mini">
-                                    <span class="stat-number">10</span>
-                                    <span class="stat-label">Membros</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="slide-image">
-                            <img src="./images/carousel1.jpg" alt="Fundação da equipe" onerror="this.src='https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=300&fit=crop'">
-                        </div>
+    <!-- Seção 1: Como tudo começou -->
+    <section class="comic-section">
+        <div class="comic-container">
+            <div class="comic-block" data-aos="fade-up">
+                <div class="comic-text">
+                    <h2>Como Tudo Começou</h2>
+                    <p>A Paratech FRC 9302 nasceu em 2022 da paixão de um grupo de estudantes por robótica e tecnologia. Inspirados pelos valores do programa FIRST Robotics Competition, decidimos criar uma equipe que não apenas competisse, mas que também fizesse a diferença em nossa comunidade.</p>
+                    
+                    <div class="speech-bubble">
+                        <p>"Nossos fundadores vieram de diferentes áreas - engenharia, programação, design e marketing - unidos pelo sonho comum de usar a tecnologia para resolver problemas reais e inspirar outros jovens a seguir carreiras em STEM."</p>
                     </div>
+                    
+                    <p>Com muita dedicação e trabalho em equipe, transformamos uma ideia ambiciosa em uma equipe de robótica competitiva que hoje impacta centenas de jovens em nossa região.</p>
                 </div>
-
-                <div class="carousel-slide">
-                    <div class="slide-content">
-                        <div class="slide-text">
-                            <h3>Nosso propósito</h3>
-                            <p>Mais do que uma equipe de robótica, somos agentes de transformação. Nosso propósito é democratizar o acesso à educação STEM, especialmente em comunidades carentes, e mostrar que a tecnologia pode ser uma ferramenta poderosa para o bem social.</p>
-                            <p>Acreditamos que cada jovem tem potencial para ser um inovador, e nossa missão é fornecer as ferramentas, conhecimento e inspiração necessários para que isso aconteça.</p>
-                            <div class="stats-mini">
-                                <div class="stat-item-mini">
-                                    <span class="stat-number">1000+</span>
-                                    <span class="stat-label">Jovens impactados</span>
-                                </div>
-                                <div class="stat-item-mini">
-                                    <span class="stat-number">15</span>
-                                    <span class="stat-label">Projetos sociais</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="slide-image">
-                            <img src="./images/carousel2.jpg" alt="Nosso propósito" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop'">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-slide">
-                    <div class="slide-content">
-                        <div class="slide-text">
-                            <h3>Onde estamos hoje</h3>
-                            <p>Hoje, a Paratech FRC 9302 é reconhecida como uma das equipes mais inovadoras e socialmente engajadas do Brasil. Já impactamos mais de 1.000 estudantes através de nossos programas educacionais e workshops gratuitos.</p>
-                            <p>Nossa equipe cresceu para 10 membros ativos, divididos em áreas especializadas como engenharia mecânica, programação, design, marketing e projetos sociais.</p>
-                            <div class="stats-mini">
-                                <div class="stat-item-mini">
-                                    <span class="stat-number">5</span>
-                                    <span class="stat-label">Competições</span>
-                                </div>
-                                <div class="stat-item-mini">
-                                    <span class="stat-number">3</span>
-                                    <span class="stat-label">Prêmios</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="slide-image">
-                            <img src="./images/carousel3.jpg" alt="Equipe atual" onerror="this.src='https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=300&fit=crop'">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-controls">
-                    <button class="carousel-btn prev" onclick="prevSlide()">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <div class="carousel-dots">
-                        <div class="dot active" onclick="currentSlide(1)"></div>
-                        <div class="dot" onclick="currentSlide(2)"></div>
-                        <div class="dot" onclick="currentSlide(3)"></div>
-                    </div>
-                    <button class="carousel-btn next" onclick="nextSlide()">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="sponsors">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>Nossos Valores</h2>
-                <div class="section-line"></div>
-                <p>Os princípios que guiam nossa jornada</p>
-            </div>
-            <div class="sponsors-grid">
-                <div class="sponsor-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="sponsor-logo">
-                        <i class="fas fa-lightbulb" style="font-size: 3rem; color: #2563eb;"></i>
-                    </div>
-                    <div class="sponsor-info">
-                        <h3>Inovação</h3>
-                        <p>Buscamos constantemente soluções criativas e tecnológicas para os desafios que enfrentamos.</p>
-                    </div>
-                </div>
-                <div class="sponsor-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="sponsor-logo">
-                        <i class="fas fa-users" style="font-size: 3rem; color: #2563eb;"></i>
-                    </div>
-                    <div class="sponsor-info">
-                        <h3>Colaboração</h3>
-                        <p>Acreditamos que os melhores resultados vêm do trabalho em equipe e da diversidade de ideias.</p>
-                    </div>
-                </div>
-                <div class="sponsor-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="sponsor-logo">
-                        <i class="fas fa-heart" style="font-size: 3rem; color: #2563eb;"></i>
-                    </div>
-                    <div class="sponsor-info">
-                        <h3>Impacto Social</h3>
-                        <p>Usamos nossa paixão por tecnologia para criar mudanças positivas em nossa comunidade.</p>
-                    </div>
-                </div>
-                <div class="sponsor-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="sponsor-logo">
-                        <i class="fas fa-trophy" style="font-size: 3rem; color: #2563eb;"></i>
-                    </div>
-                    <div class="sponsor-info">
-                        <h3>Excelência</h3>
-                        <p>Buscamos sempre a excelência em tudo que fazemos, desde competições até projetos sociais.</p>
+                
+                <div class="comic-image">
+                    <div class="paper-effect-container">
+                        <div class="image-bg" style="background-image: url('./images/equipe1.jpg');"></div>
+                        <div class="paper-overlay-svg"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Seção 2: Nosso Propósito -->
+    <section class="comic-section">
+        <div class="comic-container">
+            <div class="comic-block reverse" data-aos="fade-up">
+                <div class="comic-text">
+                    <h2>Nosso Propósito</h2>
+                    <p>Mais do que uma equipe de robótica, somos agentes de transformação. Nosso propósito é democratizar o acesso à educação STEM, especialmente em comunidades carentes, e mostrar que a tecnologia pode ser uma ferramenta poderosa para o bem social.</p>
+                    
+                    <div class="speech-bubble">
+                        <p>"Acreditamos que cada jovem tem potencial para ser um inovador, e nossa missão é fornecer as ferramentas, conhecimento e inspiração necessários para que isso aconteça."</p>
+                    </div>
+                    
+                    <p>Trabalhamos com escolas públicas, organizações sociais e comunidades locais para expandir o alcance da educação tecnológica, criando oportunidades onde antes não existiam.</p>
+                </div>
+                
+                <div class="comic-image">
+                    <div class="paper-effect-container">
+                        <div class="image-bg" style="background-image: url('./images/equipe2.jpg');"></div>
+                        <div class="paper-overlay-svg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção 3: Onde Estamos Hoje -->
+    <section class="comic-section">
+        <div class="comic-container">
+            <div class="comic-block" data-aos="fade-up">
+                <div class="comic-text">
+                    <h2>Onde Estamos Hoje</h2>
+                    <p>Hoje, a Paratech FRC 9302 é reconhecida como uma das equipes mais inovadoras e socialmente engajadas do Brasil. Já impactamos mais de 1.000 estudantes através de nossos programas educacionais e workshops gratuitos.</p>
+                    
+                    <div class="comic-stats">
+                        <div class="comic-stat">
+                            <span class="number">1000+</span>
+                            <span class="label">Estudantes Impactados</span>
+                        </div>
+                        <div class="comic-stat">
+                            <span class="number">10</span>
+                            <span class="label">Membros Ativos</span>
+                        </div>
+                        <div class="comic-stat">
+                            <span class="number">5</span>
+                            <span class="label">Projetos Sociais</span>
+                        </div>
+                    </div>
+                    
+                    <p>Nossa equipe cresceu para 10 membros ativos, divididos em áreas especializadas como engenharia mecânica, programação, design, marketing e projetos sociais. Continuamos competindo em alto nível enquanto mantemos nosso compromisso com o impacto social positivo.</p>
+                </div>
+                
+                <div class="comic-image">
+                    <div class="paper-effect-container">
+                        <div class="image-bg" style="background-image: url('./images/equipe3.jpg');"></div>
+                        <div class="paper-overlay-svg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Links Rápidos</h3>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="us.html">Sobre</a></li>
-                        <li><a href="projetos.html">Projetos</a></li>
-                        <li><a href="cad.html">CAD</a></li>
-                        <li><a href="loja.html">Loja</a></li>
+                        <li><a href='/'>Home</a></li>
+                        <li><a href='/us'>Sobre</a></li>
+                        <li><a href='/projetos'>Projetos</a></li>
+                        <li><a href='/cad'>CAD</a></li>
+                        <li><a href='/loja'>Loja</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -231,7 +481,7 @@
                 </div>
                 <div class="footer-section">
                     <h3>Contato</h3>
-                    <p>Email: <a href="/cdn-cgi/l/email-protection#89eae6e7fde8fde6c9f9e8fbe8fdeceae1b0bab9bba7eae6e4"><span class="__cf_email__" data-cfemail="f4979b9a8095809bb4849586958091979ccdc7c4c6da979b99">[email&#160;protected]</span></a></p>
+                    <p>Email: <a href="/cdn-cgi/l/email-protection#b4d7dbdac0d5c0dbf4c4d5c6d5c0d1d7dc8d87848498d5d9db"><span class="__cf_email__" data-cfemail="0c6f63627e6b7e654c7c6d7e6d78696f64253f3c3e226f6361">[email&#160;protected]</span></a></p>
                     <p>Telefone: (91) 98852-8008</p>
                 </div>
             </div>
@@ -243,16 +493,20 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="./script.js"></script>
     <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true,
-            offset: 100
+        // Inicializar animações
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out',
+                    once: true,
+                    offset: 100
+                });
+            }
         });
     </script>
-    <script src="./script.js"></script>
 </body>
 
 </html>
