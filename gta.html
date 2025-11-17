@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Shooter Sandbox - V11: Pointer Lock Fixed</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a2e;
+        }
+        canvas {
+            display: block;
+        }
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 15px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom-right-radius: 10px;
+            font-size: 14px;
+            user-select: none;
+            z-index: 1000;
+        }
+        #ui-overlay h1 {
+            font-size: 1.2em;
+            margin-top: 0;
+            color: #E91E63; /* Pink for shooter theme */
+        }
+        #mode-display {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #FF9800;
+            color: black;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            margin-top: -5px;
+            margin-left: -5px;
+            border: 1px solid red;
+            border-radius: 50%;
+            pointer-events: none; /* Ignore mouse events */
+            z-index: 1000;
+            display: none; /* Hidden until pointer is locked */
+        }
+        
+        /* Style for shot visual effect */
+        @keyframes flash {
+            from { opacity: 0.8; background-color: white; }
+            to { opacity: 0; background-color: transparent; }
+        }
+        #flash-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0;
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui-overlay">
+        <h1>Urban Shooter Sandbox (V11: Pointer Lock Fixed)</h1>
+        <p><strong>Movement:</strong> WASD or Arrow Keys.</p>
+        <p><strong>Aim/Look:</strong> Click anywhere, then move mouse.</p>
+        <p><strong>Interaction:</strong> Press <strong>E</strong> to Enter/Exit the Car.</p>
+        <p><strong>Combat:</strong> Left Mouse Button (LMB) to Shoot.</p>
+        <div id="mode-display">Mode: On Foot</div>
+    </div>
+    <div id="crosshair"></div>
+    <div id="flash-overlay"></div>
+
+    <script>
+        // Global Three.js variables
+        let scene, camera, renderer;
+        let car, playerCharacter; 
+        let pitchObject; // Object for stable vertical (pitch) rotation
+        let playerSpeed = 0.05;
+        let rotationSpeed = Math.PI / 180 * 2;
+        let isInCar = false; 
+        const INTERACT_KEY = 'e';
+        const keys = { w: false, s: false, a: false, d: false, [INTERACT_KEY]: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+        let interactionPressed = false;
+        let clock = new THREE.Clock(); 
+        
+        // --- CAMERA/COMBAT GLOBAL VARS ---
+        let isLocked = false;
+        let cameraPitch = 0; // Stores the vertical rotation value
+        const MOUSE_SENSITIVITY = 0.002;
+        
+        const raycaster = new THREE.Raycaster();
+        const PEDESTRIAN_NPCS = [];
+        const DAMAGE_PER_SHOT = 1;
+        const NPC_MAX_HEALTH = 2; 
+
+        // City Constants
+        const CITY_SIZE = 12; 
+        const BLOCK_SIZE = 7;
+        const STREET_WIDTH = 2.5;
+        const PLAZA_SIZE = 3; 
+        const BUILDING_HUE = 0.6; 
+        const BUILDING_CHANCE = 0.4; 
+
+        // Beach and Sea Constants
+        const BEACH_WIDTH = 15;
+        const SEA_DEPTH = 50;
+        const SEA_COLOR = 0x2196F3;
+        const SAND_COLOR = 0xfdd835;
+        const PALM_COUNT = 20;
+        const NUM_PEDESTRIAN_NPCS = 20; 
+
+        // NPC Car Array
+        const npcCars = [];
+        const NUM_NPC_CARS = 5;
+        const NPC_CAR_SPEED = 0.03;
+        
+        const totalCityWidth = CITY_SIZE * BLOCK_SIZE;
+        const cityCenterZ = SEA_DEPTH / 2;
+        const roadAlongBeachZ = totalCityWidth / 2 + STREET_WIDTH / 2; 
+        const beachSpawnZ = totalCityWidth / 2 + BEACH_WIDTH / 2 + cityCenterZ;
+
+        // Path points define the road network for NPC cars
+        const PATH_POINTS = [
+            new THREE.Vector3(-totalCityWidth / 2 + BLOCK_SIZE / 2, 0, -totalCityWidth / 2 + STREET_WIDTH / 2),
+            new THREE.Vector3(totalCityWidth / 2 - BLOCK_SIZE / 2, 0, -totalCityWidth / 2 + STREET_WIDTH / 2),
+            new THREE.Vector3(totalCityWidth / 2 - BLOCK_SIZE / 2, 0, roadAlongBeachZ),
+            new THREE.Vector3(-totalCityWidth / 2 + BLOCK_SIZE / 2, 0, roadAlongBeachZ),
+            new THREE.Vector3(-totalCityWidth / 2 + BLOCK_SIZE / 2, 0, -totalCityWidth / 2 + STREET_WIDTH / 2)
+        ];
+
+        /**
+         * Converts HSV to an array of RGB values [r, g, b]
+         */
+        function hsvToRgb(h, s, v) {
+            let r, g, b;
+            const i = Math.floor(h * 6);
+            const f = h * 6 - i;
+            const p = v * (1 - s);
+            const q = v * (1 - f * s);
+            const t = v * (1 - (1 - f) * s);
+            switch (i % 6) {
+                case 0: r = v, g = t, b = p; break;
+                case 1: r = q, g = v, b = p; break;
+                case 2: r = p, g = v, b = t; break;
+                case 3: r = p, g = q, b = v; break;
+                case 4: r = t, g = p, b = v; break;
+                case 5: r = v, g = p, b = q; break;
+            }
+            return [r, g, b];
+        }
+
+        /**
+         * Initializes the Three.js scene, camera, and renderer.
+         */
+        function initScene() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x77aaff); 
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            
+            // The pitchObject controls the vertical camera angle and will move with the player
+            pitchObject = new THREE.Object3D();
+            pitchObject.add(camera);
+            scene.add(pitchObject); // Add to scene globally
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.body.appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0x404040, 3);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
+            directionalLight.position.set(20, 30, 15);
+            directionalLight.target.position.set(0, 0, 0);
+            directionalLight.castShadow = true;
+            
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 100;
+            directionalLight.shadow.camera.left = -50;
+            directionalLight.shadow.camera.right = 50;
+            directionalLight.shadow.camera.top = 50;
+            directionalLight.shadow.camera.bottom = -50;
+            scene.add(directionalLight);
+            scene.add(directionalLight.target);
+        }
+
+        function createTree(x, z) {
+            const trunkHeight = Math.random() * 1.5 + 2.5;
+            const trunkGeometry = new THREE.CylinderGeometry(0.2, 0.3, trunkHeight, 8);
+            const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+            const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+            trunk.position.set(x, trunkHeight / 2, z);
+            trunk.castShadow = true;
+            trunk.receiveShadow = true;
+            scene.add(trunk);
+
+            const leavesGeometry = new THREE.SphereGeometry(Math.random() * 1 + 1.5, 8, 8);
+            const leavesMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
+            const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+            leaves.position.set(x, trunkHeight + leavesGeometry.parameters.radius * 0.7, z);
+            leaves.castShadow = true;
+            scene.add(leaves);
+        }
+
+        function createPalmTree(x, z) {
+            const trunkHeight = Math.random() * 3 + 5; 
+            const trunkGeometry = new THREE.CylinderGeometry(0.15, 0.2, trunkHeight, 8);
+            const trunkMaterial = new THREE.MeshLambertMaterial({ color: 0xA0522D });
+            const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+            trunk.position.set(x, trunkHeight / 2, z);
+            trunk.castShadow = true;
+            trunk.receiveShadow = true;
+            scene.add(trunk);
+
+            const leavesMaterial = new THREE.MeshLambertMaterial({ color: 0x2E8B57 });
+            
+            const numFronds = 5 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < numFronds; i++) {
+                const frondGeometry = new THREE.ConeGeometry(0.5, 2, 4);
+                const frond = new THREE.Mesh(frondGeometry, leavesMaterial);
+                frond.position.set(x, trunkHeight + 0.5, z);
+                frond.rotation.x = Math.PI / 2;
+                frond.rotation.z = (Math.PI * 2 / numFronds) * i + Math.random() * 0.5;
+                frond.castShadow = true;
+                scene.add(frond);
+            }
+        }
+
+        /**
+         * Creates a human-like NPC with health and movement properties.
+         */
+        function createHumanNPC(x, z, bounds) {
+            const npcGroup = new THREE.Group();
+            
+            // Random color for clothing
+            const randomHue = Math.random();
+            const rgbTorso = hsvToRgb(randomHue, 0.7, 0.8);
+
+            // Torso (Main body)
+            const torsoHeight = 0.5;
+            const torsoRadius = 0.15;
+            const torsoGeometry = new THREE.CylinderGeometry(torsoRadius, torsoRadius, torsoHeight, 8);
+            const torsoMaterial = new THREE.MeshLambertMaterial({ color: new THREE.Color(rgbTorso[0], rgbTorso[1], rgbTorso[2]) }); 
+            // Store original color for damage feedback
+            torsoMaterial.userData.originalColor = new THREE.Color(rgbTorso[0], rgbTorso[1], rgbTorso[2]).getHex();
+            
+            const torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
+            torso.position.y = torsoHeight / 2; 
+            torso.name = 'NPCTorso'; // Name for raycasting
+            torso.castShadow = true;
+            npcGroup.add(torso);
+
+            // Head (Sphere)
+            const headRadius = 0.2;
+            const headGeometry = new THREE.SphereGeometry(headRadius, 8, 8);
+            const headMaterial = new THREE.MeshLambertMaterial({ color: 0xffffaa }); // Pale yellow skin tone
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = torsoHeight + headRadius * 0.7; 
+            head.castShadow = true;
+            npcGroup.add(head);
+            
+            npcGroup.position.set(x, 0, z); // Group base is at Y=0
+            npcGroup.rotation.y = Math.random() * Math.PI * 2; 
+            
+            // NPC AI Data
+            npcGroup.userData = {
+                health: NPC_MAX_HEALTH,
+                isNPC: true,
+                moveSpeed: 0.01 + Math.random() * 0.015,
+                moveDirection: new THREE.Vector3(Math.random() - 0.5, 0, Math.random() - 0.5).normalize(),
+                turnTimer: Math.random() * 100 + 100,
+                bounds: bounds
+            };
+
+            scene.add(npcGroup);
+            PEDESTRIAN_NPCS.push(npcGroup);
+        }
+
+        /**
+         * Updates the position and direction of all walking NPCs.
+         */
+        function updateNPCMovement() {
+            for (const npc of PEDESTRIAN_NPCS) {
+                const { moveSpeed, moveDirection, bounds } = npc.userData;
+
+                // Move NPC
+                npc.position.addScaledVector(moveDirection, moveSpeed);
+
+                // Boundary check and redirection
+                let needsTurn = false;
+                if (npc.position.x < bounds.minX || npc.position.x > bounds.maxX ||
+                    npc.position.z < bounds.minZ || npc.position.z > bounds.maxZ) {
+                    
+                    // Bounce back from boundary
+                    if (npc.position.x < bounds.minX) npc.position.x = bounds.minX;
+                    if (npc.position.x > bounds.maxX) npc.position.x = bounds.maxX;
+                    if (npc.position.z < bounds.minZ) npc.position.z = bounds.minZ;
+                    if (npc.position.z > bounds.maxZ) npc.position.z = bounds.maxZ;
+
+                    needsTurn = true;
+                }
+
+                // Random turning timer
+                npc.userData.turnTimer -= 1;
+                if (npc.userData.turnTimer <= 0) {
+                    needsTurn = true;
+                    npc.userData.turnTimer = Math.random() * 150 + 100;
+                }
+
+                if (needsTurn) {
+                    // Calculate a new random direction
+                    const newDirection = new THREE.Vector3(Math.random() - 0.5, 0, Math.random() - 0.5).normalize();
+                    npc.userData.moveDirection.copy(newDirection);
+
+                    // Update rotation to face new direction
+                    const targetAngle = Math.atan2(newDirection.x, newDirection.z);
+                    npc.rotation.y = targetAngle;
+                }
+            }
+        }
+
+
+        /**
+         * Creates the Billboard with the text "NATHAN".
+         */
+        function createBillboard() {
+            const billboardGroup = new THREE.Group();
+            const billboardHeight = 8;
+            const billboardWidth = 10;
+            const postRadius = 0.3; 
+
+            // 1. Post 
+            const postGeometry = new THREE.CylinderGeometry(postRadius, postRadius, billboardHeight, 6);
+            const postMaterial = new THREE.MeshLambertMaterial({ color: 0x696969 }); 
+            const post = new THREE.Mesh(postGeometry, postMaterial);
+            post.position.y = billboardHeight / 2;
+            post.castShadow = true;
+            billboardGroup.add(post);
+
+            // 2. Sign Canvas Texture
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            
+            // Background color 
+            ctx.fillStyle = '#C4302B';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Text setup
+            ctx.font = 'bold 75px Inter, sans-serif';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('NATHAN', canvas.width / 2, canvas.height / 2 + 5); 
+
+            const texture = new THREE.CanvasTexture(canvas);
+            
+            // 3. Sign Plane
+            const signAspect = canvas.height / canvas.width;
+            const signGeometry = new THREE.PlaneGeometry(billboardWidth, billboardWidth * signAspect);
+            const signMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: false });
+            
+            const sign = new THREE.Mesh(signGeometry, signMaterial);
+            sign.position.y = billboardHeight;
+            sign.rotation.y = Math.PI / 4; 
+            sign.castShadow = true;
+            
+            billboardGroup.add(sign);
+            
+            // Position near the beach road
+            const billboardZ = totalCityWidth / 2 + STREET_WIDTH * 1.5 + cityCenterZ; 
+            const billboardX = -totalCityWidth / 2 + 5; 
+            
+            billboardGroup.position.set(billboardX, 0, billboardZ);
+            scene.add(billboardGroup);
+        }
+
+        /**
+         * Creates the city, including ground, buildings, and water.
+         */
+        function createCity() {
+            const totalCityWidth = CITY_SIZE * BLOCK_SIZE;
+            const groundXSize = totalCityWidth;
+            const groundZSize = totalCityWidth + BEACH_WIDTH + SEA_DEPTH; 
+            const cityCenterZ = SEA_DEPTH / 2;
+
+            // Main Ground Plane (asphalt for city roads) - Y=0
+            const groundGeometry = new THREE.PlaneGeometry(groundXSize, groundZSize);
+            const groundMaterial = new THREE.MeshLambertMaterial({ color: 0x222222 }); 
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.z = cityCenterZ; 
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // --- Billboard ---
+            createBillboard();
+
+            // --- Building Generation & Plaza ---
+            const buildingBlockSize = BLOCK_SIZE - STREET_WIDTH;
+            const buildingGeometry = new THREE.BoxGeometry(buildingBlockSize * 0.8, 1, buildingBlockSize * 0.8);
+
+            const plazaStart = (CITY_SIZE - PLAZA_SIZE) / 2;
+            const plazaEnd = (CITY_SIZE + PLAZA_SIZE) / 2;
+            
+            // Plaza boundary limits for NPCs
+            const plazaMinX = -(PLAZA_SIZE * BLOCK_SIZE - STREET_WIDTH) / 2;
+            const plazaMaxX = (PLAZA_SIZE * BLOCK_SIZE - STREET_WIDTH) / 2;
+            const plazaMinZ = cityCenterZ - (PLAZA_SIZE * BLOCK_SIZE - STREET_WIDTH) / 2;
+            const plazaMaxZ = cityCenterZ + (PLAZA_SIZE * BLOCK_SIZE - STREET_WIDTH) / 2;
+            const plazaBounds = {minX: plazaMinX, maxX: plazaMaxX, minZ: plazaMinZ, maxZ: plazaMaxZ};
+
+
+            for (let i = 0; i < CITY_SIZE; i++) {
+                for (let j = 0; j < CITY_SIZE; j++) {
+                    const x = (i - CITY_SIZE / 2 + 0.5) * BLOCK_SIZE;
+                    const z = (j - CITY_SIZE / 2 + 0.5) * BLOCK_SIZE;
+
+                    const isPlaza = i >= plazaStart && i < plazaEnd && j >= plazaStart && j < plazaEnd;
+
+                    if (!isPlaza && Math.random() < BUILDING_CHANCE) {
+                        const height = Math.random() * 10 + 5; 
+
+                        const building = new THREE.Mesh(buildingGeometry, new THREE.MeshLambertMaterial({
+                            color: new THREE.Color().setHSL(BUILDING_HUE, 0.5, Math.random() * 0.3 + 0.4)
+                        }));
+                        
+                        building.scale.y = height;
+                        building.position.set(x, height / 2, z + cityCenterZ); 
+                        building.castShadow = true;
+                        building.receiveShadow = true;
+                        scene.add(building);
+                    } else if (isPlaza) {
+                        // Plaza Ground (Grass)
+                         const plazaGeometry = new THREE.BoxGeometry(BLOCK_SIZE * PLAZA_SIZE - STREET_WIDTH * 0.5, 0.1, BLOCK_SIZE * PLAZA_SIZE - STREET_WIDTH * 0.5);
+                         const plazaMaterial = new THREE.MeshLambertMaterial({ color: 0x66BB6A }); 
+                         const plaza = new THREE.Mesh(plazaGeometry, plazaMaterial);
+                         plaza.position.set(0, 0.05, 0 + cityCenterZ); 
+                         plaza.receiveShadow = true;
+                         scene.add(plaza);
+
+                         // Add trees to the plaza
+                         const plazaCenter = new THREE.Vector3(0, 0, cityCenterZ);
+                         const treeSpacing = (BLOCK_SIZE * PLAZA_SIZE - STREET_WIDTH) / 4;
+                         for (let tx = -1; tx <= 1; tx++) {
+                             for (let tz = -1; tz <= 1; tz++) {
+                                 if (Math.random() > 0.3) {
+                                     createTree(plazaCenter.x + tx * treeSpacing * (0.8 + Math.random() * 0.4), plazaCenter.z + tz * treeSpacing * (0.8 + Math.random() * 0.4));
+                                 }
+                             }
+                         }
+                    }
+                }
+            }
+
+            // --- Beach ---
+            const beachGeometry = new THREE.PlaneGeometry(groundXSize, BEACH_WIDTH, 10, 2); 
+            const beachMaterial = new THREE.MeshLambertMaterial({ color: SAND_COLOR });
+            const beach = new THREE.Mesh(beachGeometry, beachMaterial);
+            beach.rotation.x = -Math.PI / 2;
+            beach.position.z = totalCityWidth / 2 + BEACH_WIDTH / 2 + cityCenterZ;
+            beach.position.y = 0.01; 
+            beach.receiveShadow = true;
+            scene.add(beach);
+
+            // Beach boundary limits for NPCs
+            const beachFrontXMin = -totalCityWidth / 2 + STREET_WIDTH;
+            const beachFrontXMax = totalCityWidth / 2 - STREET_WIDTH;
+            const beachMinZ = totalCityWidth / 2 + STREET_WIDTH + cityCenterZ;
+            const beachMaxZ = totalCityWidth / 2 + BEACH_WIDTH - STREET_WIDTH * 2 + cityCenterZ;
+            const beachBounds = {minX: beachFrontXMin, maxX: beachFrontXMax, minZ: beachMinZ, maxZ: beachMaxZ};
+
+
+            // Add palm trees along the beach
+            for (let i = 0; i < PALM_COUNT; i++) {
+                const randX = beachFrontXMin + Math.random() * (beachFrontXMax - beachFrontXMin);
+                const randZ = beachMinZ + (Math.random() * (BEACH_WIDTH - STREET_WIDTH * 2));
+                createPalmTree(randX, randZ);
+            }
+
+            // --- Sea ---
+            const seaGeometry = new THREE.PlaneGeometry(groundXSize, SEA_DEPTH, 32, 32); 
+            const seaMaterial = new THREE.MeshLambertMaterial({ color: SEA_COLOR, transparent: true, opacity: 0.8 });
+            
+            // Custom shader for wave effect
+            seaMaterial.onBeforeCompile = (shader) => {
+                shader.uniforms.time = { value: 0 };
+                shader.vertexShader = `
+                    uniform float time;
+                    ${shader.vertexShader}
+                `.replace(
+                    '#include <begin_vertex>',
+                    `
+                    #include <begin_vertex>
+                    float waveHeight = 0.5;
+                    float waveSpeed = 2.0;
+                    float waveFrequency = 1.0;
+                    float wave = sin(position.x * waveFrequency + time * waveSpeed) * waveHeight * 0.5 + sin(position.z * waveFrequency * 0.7 + time * waveSpeed * 0.7) * waveHeight * 0.5;
+                    transformed.y += wave;
+                    `
+                );
+                seaMaterial.userData.shader = shader; 
+            };
+
+            const sea = new THREE.Mesh(seaGeometry, seaMaterial);
+            sea.rotation.x = -Math.PI / 2;
+            sea.position.z = totalCityWidth / 2 + BEACH_WIDTH + SEA_DEPTH / 2 + cityCenterZ;
+            sea.position.y = -0.1; 
+            sea.receiveShadow = true;
+            scene.add(sea);
+
+
+            // --- Pedestrian NPC Placement ---
+            const plazaNPCs = Math.floor(NUM_PEDESTRIAN_NPCS * 0.4);
+            const beachNPCs = NUM_PEDESTRIAN_NPCS - plazaNPCs;
+
+            // Plaza NPCs
+            for (let i = 0; i < plazaNPCs; i++) {
+                const randX = plazaMinX + Math.random() * (plazaMaxX - plazaMinX);
+                const randZ = plazaMinZ + Math.random() * (plazaMaxZ - plazaMinZ);
+                createHumanNPC(randX, randZ, plazaBounds);
+            }
+
+            // Beach NPCs
+            for (let i = 0; i < beachNPCs; i++) {
+                const randX = beachFrontXMin + Math.random() * (beachFrontXMax - beachFrontXMin);
+                const randZ = beachMinZ + Math.random() * (beachMaxZ - beachMinZ);
+                createHumanNPC(randX, randZ, beachBounds);
+            }
+        }
+
+        /**
+         * Creates the player objects (car and character).
+         */
+        function createPlayer() {
+            // Spawn position on the beach
+            const spawnX = Math.random() * 10 - 5;
+            const spawnZ = beachSpawnZ + Math.random() * 5 - 2.5;
+
+            // 1. The Car (our main vehicle)
+            const carGeometry = new THREE.BoxGeometry(0.7, 0.5, 1.2);
+            const carMaterial = new THREE.MeshLambertMaterial({ color: 0xff4500 });
+            car = new THREE.Mesh(carGeometry, carMaterial);
+            car.position.set(0, 0.25, cityCenterZ);
+            car.castShadow = true;
+            car.visible = false; // Hide car at start
+            scene.add(car);
+
+            // 2. The Character (Anthropomorphic Group)
+            playerCharacter = new THREE.Group(); // This is now the Yaw (horizontal) controller
+            
+            // Torso (Main body)
+            const torsoHeight = 0.5;
+            const torsoRadius = 0.15;
+            const torsoGeometry = new THREE.CylinderGeometry(torsoRadius, torsoRadius, torsoHeight, 8);
+            const torsoMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 }); 
+            const torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
+            torso.position.y = torsoHeight / 2; 
+            torso.name = 'PlayerTorso'; // Name for internal reference
+            torso.castShadow = true;
+            playerCharacter.add(torso);
+
+            // Head (Sphere)
+            const headRadius = 0.2;
+            const headGeometry = new THREE.SphereGeometry(headRadius, 8, 8);
+            const headMaterial = new THREE.MeshLambertMaterial({ color: 0xffff00 }); 
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = torsoHeight + headRadius * 0.7; 
+            head.castShadow = true;
+            playerCharacter.add(head);
+
+            // Gun model (small box)
+            const gunGeometry = new THREE.BoxGeometry(0.05, 0.05, 0.2);
+            const gunMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 });
+            const gun = new THREE.Mesh(gunGeometry, gunMaterial);
+            gun.position.set(0.2, torsoHeight * 0.7, 0.15); // Position next to the torso (right hand)
+            gun.rotation.x = -Math.PI / 12; // Angle it slightly forward
+            gun.name = 'Gun';
+            gun.castShadow = true;
+            playerCharacter.add(gun);
+            
+            playerCharacter.position.set(spawnX, 0, spawnZ);
+            playerCharacter.visible = true; 
+            scene.add(playerCharacter);
+        }
+
+        /**
+         * Creates an NPC car.
+         */
+        function createNPCCar(startPos, hue) {
+            const carGeometry = new THREE.BoxGeometry(0.7, 0.5, 1.2);
+            const rgb = hsvToRgb(hue, 0.8, 0.7);
+            const carMaterial = new THREE.MeshLambertMaterial({ color: new THREE.Color(rgb[0], rgb[1], rgb[2]) });
+            
+            const car = new THREE.Mesh(carGeometry, carMaterial);
+            car.position.copy(startPos);
+            car.position.y = 0.25;
+            car.castShadow = true;
+
+            car.userData = {
+                currentPoint: 0,
+                pathProgress: 0,
+                speed: NPC_CAR_SPEED * (0.8 + Math.random() * 0.4)
+            };
+            
+            scene.add(car);
+            return car;
+        }
+
+        /**
+         * Initializes the NPC cars and places them on the path.
+         */
+        function initNPCCars() {
+            // Use the first point of the path as the initial spawn point (with Z offset)
+            const startPoint = PATH_POINTS[0].clone().add(new THREE.Vector3(0, 0, cityCenterZ)); 
+            
+            for (let i = 0; i < NUM_NPC_CARS; i++) {
+                const hue = Math.random();
+                const car = createNPCCar(startPoint, hue);
+                
+                // Stagger their path progress so they don't all start at the same spot
+                const totalPathLengthEstimate = PATH_POINTS.length * BLOCK_SIZE * 0.8;
+                car.userData.pathProgress = i * (totalPathLengthEstimate / NUM_NPC_CARS);
+                
+                npcCars.push(car);
+            }
+        }
+
+        /**
+         * Updates the movement and rotation for the NPC cars.
+         */
+        function updateNPCCars() {
+            const laneOffset = STREET_WIDTH / 4;
+            // Adjust path points to be centered correctly in the lane
+            const adjustedPathPoints = PATH_POINTS.map((p, index) => {
+                const nextP = PATH_POINTS[(index + 1) % PATH_POINTS.length];
+                const dir = nextP.clone().sub(p).normalize();
+                const up = new THREE.Vector3(0, 1, 0);
+                const laneVector = up.clone().cross(dir).multiplyScalar(laneOffset);
+                return p.clone().add(laneVector).add(new THREE.Vector3(0, 0, cityCenterZ));
+            });
+
+            for (const npcCar of npcCars) {
+                const userData = npcCar.userData;
+                const startPoint = adjustedPathPoints[userData.currentPoint];
+                const nextPointIndex = (userData.currentPoint + 1) % adjustedPathPoints.length;
+                const endPoint = adjustedPathPoints[nextPointIndex];
+
+                const direction = endPoint.clone().sub(startPoint);
+                const distance = direction.length();
+                direction.normalize();
+
+                const distanceToTravel = userData.speed;
+                userData.pathProgress += distanceToTravel;
+
+                if (userData.pathProgress >= distance) {
+                    userData.pathProgress = 0;
+                    userData.currentPoint = nextPointIndex;
+
+                    const newNextIndex = (userData.currentPoint + 1) % adjustedPathPoints.length;
+                    const newStart = adjustedPathPoints[userData.currentPoint];
+                    const newEnd = adjustedPathPoints[newNextIndex];
+                    direction.copy(newEnd).sub(newStart).normalize();
+                }
+
+                const t = userData.pathProgress / distance;
+                npcCar.position.lerpVectors(startPoint, endPoint, t);
+                npcCar.position.y = 0.25;
+
+                const targetQuaternion = new THREE.Quaternion().setFromUnitVectors(
+                    new THREE.Vector3(0, 0, 1),
+                    direction
+                );
+                npcCar.quaternion.slerp(targetQuaternion, 0.1);
+            }
+        }
+
+        /**
+         * Handles the 'E' key press to switch between car and character mode.
+         */
+        function handleInteraction() {
+            if (isInCar) {
+                // EXITING THE CAR
+                isInCar = false;
+                
+                const exitOffset = new THREE.Vector3(-0.8, 0, 0);
+                exitOffset.applyQuaternion(car.quaternion);
+                
+                playerCharacter.position.copy(car.position).add(exitOffset);
+                playerCharacter.position.y = 0; 
+                playerCharacter.quaternion.copy(car.quaternion); 
+                
+                playerCharacter.visible = true;
+                
+            } else {
+                // ENTERING THE CAR
+                const distanceToCar = playerCharacter.position.distanceTo(car.position);
+                
+                if (distanceToCar < 2.0) { 
+                    isInCar = true;
+                    
+                    car.position.copy(playerCharacter.position);
+                    car.position.y = 0.25; 
+                    
+                    // Match player's horizontal rotation, ignoring pitch
+                    const playerYaw = playerCharacter.rotation.y;
+                    car.rotation.y = playerYaw; 
+
+                    playerCharacter.visible = false;
+                } else {
+                    console.log("Too far from the car to enter (need to be within 2.0 units)!");
+                }
+            }
+            document.getElementById('mode-display').textContent = isInCar ? "Mode: Driving" : "Mode: On Foot";
+        }
+
+        /**
+         * Displays a brief white flash effect on the screen.
+         */
+        function showMuzzleFlash() {
+            const flashOverlay = document.getElementById('flash-overlay');
+            flashOverlay.style.opacity = '0.8';
+            flashOverlay.style.animation = 'flash 0.1s ease-out';
+            
+            // Remove the animation style after it finishes to allow it to be re-triggered
+            setTimeout(() => {
+                flashOverlay.style.opacity = '0';
+                flashOverlay.style.animation = 'none';
+            }, 100);
+        }
+
+        /**
+         * Handles player shooting using a raycaster.
+         */
+        function handleShoot() {
+            if (isInCar || !isLocked) return; // Cannot shoot while driving or if pointer is not locked
+
+            showMuzzleFlash();
+
+            // 1. Raycaster Setup: Shoot from the camera center (crosshair)
+            const screenCenter = new THREE.Vector2(0, 0); 
+            raycaster.setFromCamera(screenCenter, camera);
+
+            // 2. Determine targets: Only consider the main torso mesh of each NPC
+            const targets = PEDESTRIAN_NPCS.flatMap(npc => npc.children.filter(c => c.name === 'NPCTorso'));
+            
+            // 3. Find intersections
+            const intersects = raycaster.intersectObjects(targets, false);
+
+            if (intersects.length > 0) {
+                const hitMesh = intersects[0].object;
+                const npcGroup = hitMesh.parent;
+
+                if (npcGroup.userData.isNPC) {
+                    // Visual feedback: briefly flash red
+                    const originalColor = hitMesh.material.userData.originalColor;
+
+                    hitMesh.material.color.set(0xff0000);
+                    setTimeout(() => {
+                        // Revert color 
+                        hitMesh.material.color.set(originalColor);
+                    }, 100);
+
+                    // Combat logic
+                    npcGroup.userData.health -= DAMAGE_PER_SHOT;
+
+                    if (npcGroup.userData.health <= 0) {
+                        // Eliminate NPC
+                        const index = PEDESTRIAN_NPCS.indexOf(npcGroup);
+                        if (index > -1) {
+                            PEDESTRIAN_NPCS.splice(index, 1);
+                        }
+                        scene.remove(npcGroup);
+                        console.log("NPC Eliminated!");
+                    } else {
+                        console.log(`NPC Hit! Remaining Health: ${npcGroup.userData.health}`);
+                    }
+                }
+            }
+        }
+        
+        // --- MOUSE LOOK HANDLERS ---
+        function onMouseMove(event) {
+            if (!isLocked || isInCar) return;
+
+            const movementX = event.movementX || event.mozMovementX || 0;
+            const movementY = event.movementY || event.mozMovementY || 0;
+
+            // YAW: Rotate the player mesh directly around the Y axis
+            playerCharacter.rotation.y -= movementX * MOUSE_SENSITIVITY;
+            
+            // PITCH: Update the pitch angle (vertical look)
+            cameraPitch += movementY * MOUSE_SENSITIVITY; 
+
+            // Clamp pitch rotation (look up/down limits)
+            cameraPitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, cameraPitch));
+            
+            // Apply pitch rotation to the dedicated object
+            pitchObject.rotation.x = cameraPitch;
+        }
+
+        function setupPointerLock() {
+            const element = document.body;
+
+            // Lock event listener: Click anywhere on the body to request lock
+            document.addEventListener('click', (e) => {
+                // If the pointer isn't locked yet, try to lock it.
+                if (!isLocked) {
+                    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock;
+                    element.requestPointerLock();
+                }
+            }, false);
+
+            // Change event listener to update our state (isLocked)
+            document.addEventListener('pointerlockchange', lockChangeAlert, false);
+            document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+
+            function lockChangeAlert() {
+                if (document.pointerLockElement === element || document.mozPointerLockElement === element) {
+                    // Lock was successful
+                    isLocked = true;
+                    document.getElementById('crosshair').style.display = 'block';
+                } else {
+                    // Lock was lost (e.g., user pressed Esc)
+                    isLocked = false;
+                    document.getElementById('crosshair').style.display = 'none';
+                }
+            }
+            document.addEventListener("mousemove", onMouseMove, false);
+        }
+        // --- END MOUSE LOOK HANDLERS ---
+
+
+        /**
+         * Updates the movement and rotation for the active player object.
+         */
+        function updatePlayer() {
+            const activeObject = isInCar ? car : playerCharacter;
+
+            // --- Car Mode Logic ---
+            if (isInCar) {
+                let rotationAngle = 0;
+                let moveDirection = 0;
+
+                // Car rotation is still controlled by A/D keys
+                if (keys.a || keys.ArrowLeft) { rotationAngle = rotationSpeed; }
+                if (keys.d || keys.ArrowRight) { rotationAngle = -rotationSpeed; }
+
+                if (rotationAngle !== 0) {
+                    activeObject.rotation.y += rotationAngle;
+                }
+
+                if (keys.w || keys.ArrowUp) { moveDirection = 1; }
+                else if (keys.s || keys.ArrowDown) { moveDirection = -0.5; }
+
+                if (moveDirection !== 0) {
+                    const forwardVector = new THREE.Vector3(0, 0, 1);
+                    forwardVector.applyQuaternion(activeObject.quaternion);
+                    activeObject.position.addScaledVector(forwardVector, moveDirection * playerSpeed);
+                }
+            } 
+            // --- Character Mode Logic (Walking - Mouse Look Integrated) ---
+            else {
+                // Movement (Relative to PlayerCharacter Yaw)
+                let charSpeed = playerSpeed * 0.5;
+                
+                let deltaX = 0; // Strafe
+                let deltaZ = 0; // Forward/Backward
+
+                // W: Forward (-Z local axis), S: Backward (+Z local axis)
+                if (keys.w || keys.ArrowUp) { deltaZ -= 1; } 
+                if (keys.s || keys.ArrowDown) { deltaZ += 1; } 
+
+                // A: Strafe Left (-X local axis), D: Strafe Right (+X local axis)
+                if (keys.a || keys.ArrowLeft) { deltaX -= 1; } 
+                if (keys.d || keys.ArrowRight) { deltaX += 1; } 
+
+                if (deltaX !== 0 || deltaZ !== 0) {
+                    // Create a direction vector based on keyboard input (in player's local space)
+                    const tempVector = new THREE.Vector3(deltaX, 0, deltaZ).normalize();
+                    
+                    // Rotate the movement vector by the player's current rotation (Yaw)
+                    const moveQuaternion = new THREE.Quaternion().setFromEuler(playerCharacter.rotation);
+                    tempVector.applyQuaternion(moveQuaternion);
+
+                    // Apply the movement
+                    activeObject.position.addScaledVector(tempVector, charSpeed);
+                }
+            }
+        }
+
+        /**
+         * Updates the camera position to follow the active object.
+         */
+        function updateCamera() {
+            const activeObject = isInCar ? car : playerCharacter;
+            
+            if (isInCar) {
+                // Third-person view for car mode
+                const offset = new THREE.Vector3(0, 5, -8);
+                offset.applyQuaternion(activeObject.quaternion);
+                
+                const targetPosition = activeObject.position.clone().add(offset);
+                camera.position.lerp(targetPosition, 0.1);
+                
+                const lookAtTarget = activeObject.position.clone().add(new THREE.Vector3(0, 1, 0));
+                camera.lookAt(lookAtTarget);
+
+                // Reset pitch object for smooth transition when exiting car later
+                pitchObject.rotation.x = 0;
+                
+            } else {
+                // TPS Shooter Camera (On Foot)
+                const cameraHeight = 1.4; 
+                
+                // 1. Position the pitch object at the player's head height
+                // The pitch object now follows the player's position
+                pitchObject.position.set(activeObject.position.x, activeObject.position.y + cameraHeight, activeObject.position.z);
+                
+                // 2. Yaw: Match the pitch object's yaw to the player's yaw
+                // The pitch object now follows the player's horizontal rotation
+                pitchObject.rotation.y = activeObject.rotation.y;
+                
+                // Pitch rotation (X-axis) is handled in onMouseMove
+            }
+        }
+
+        /**
+         * Setup input listeners.
+         */
+        function setupInput() {
+            window.addEventListener('keydown', (event) => {
+                const key = event.key.toLowerCase();
+                if (keys.hasOwnProperty(key) || key.startsWith('arrow')) {
+                    keys[key] = true;
+                }
+                if (key === INTERACT_KEY && !interactionPressed) {
+                    handleInteraction();
+                    interactionPressed = true;
+                }
+            });
+
+            window.addEventListener('keyup', (event) => {
+                const key = event.key.toLowerCase();
+                if (keys.hasOwnProperty(key) || key.startsWith('arrow')) {
+                    keys[key] = false;
+                }
+                if (key === INTERACT_KEY) {
+                    interactionPressed = false;
+                }
+            });
+            
+            // Combat listener
+            window.addEventListener('mousedown', (event) => {
+                if (event.button === 0) { // Left Mouse Button
+                    handleShoot();
+                }
+            });
+
+            window.addEventListener('resize', onWindowResize);
+            
+            // Initialize mouse look handlers
+            setupPointerLock();
+        }
+
+        /**
+         * Handles window resize event.
+         */
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        /**
+         * Main function to start the game.
+         */
+        window.onload = function () {
+            initScene();
+            createCity();
+            createPlayer();
+            initNPCCars(); 
+            setupInput();
+
+            updateCamera();
+
+            // Start the game loop
+            animate();
+        };
+
+        /**
+         * The main game loop.
+         */
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const delta = clock.getDelta();
+            const elapsedTime = clock.getElapsedTime();
+
+            // Update sea shader time uniform
+            scene.children.forEach(obj => {
+                if (obj.material && obj.material.userData.shader) {
+                    obj.material.userData.shader.uniforms.time.value = elapsedTime;
+                }
+            });
+
+            updatePlayer();
+            updateCamera();
+            updateNPCCars();
+            updateNPCMovement();
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
